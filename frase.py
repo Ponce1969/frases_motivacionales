@@ -19,7 +19,7 @@ def obtener_frase():
             frase = response.json()["content"]
             frase = traducir_texto(frase)
             autor = response.json()["author"]
-            return f"{frase} - {autor}"  # Devuelve la frase y el autor
+            return [frase , autor] # Devuelve la frase y el autor
         else:
             st.error("Error, no se ha podido conectar con la API")
             return None
@@ -55,19 +55,26 @@ def exibir_frase():
     papiro_style = """
         <style>
             .papiro {
+                display: flex;
+                flex-direction: column;
                 background-color:#365233;
                 padding: 70px;
-                border-radius: 20px;
+                border-radius:20px;
                 font-family: 'Book Antiqua', 'Times New Roman', Palatino, serif;
-                font-size: 24px;    /* Tamaño de la letra */
+                font-size:34px;    /* Tamaño de la letra */
                 color: white;      /* Color del texto */
             }
+            .papiro em {
+                align-self: flex-end;
+                padding-top: 20px;
+                }
+                
         </style>
     """
 
     # Mostrar la frase dentro del papiro
     st.markdown(papiro_style, unsafe_allow_html=True)
-    st.markdown(f'<div class="papiro">{frase_motivacional}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="papiro">{frase_motivacional[0]}<br><em>{frase_motivacional[1]}</em></div>', unsafe_allow_html=True)
 
 # Llamar a la función
 exibir_frase()
