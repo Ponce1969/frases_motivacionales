@@ -1,6 +1,10 @@
 import streamlit as st # se instala con pip install streamlit
 import requests # se instala con pip install requests
 from translate import Translator # se instala con pip install translate, con googletrans no funciona.
+import urllib3  # Importar urllib3 para manejar advertencias
+
+# Desactivar advertencias de solicitudes no verificadas
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Título de la página
 st.title("Frase motivacional")
@@ -14,7 +18,7 @@ def obtener_frase():
     """
     try:
         url = "https://api.quotable.io/random"
-        response = requests.get(url)
+        response = requests.get(url, verify=False)  # Deshabilitar verificación de SSL
         if response.status_code == 200:
             frase = response.json()["content"]
             frase = traducir_texto(frase)
@@ -51,6 +55,9 @@ def exibir_frase():
     """
     frase_motivacional = obtener_frase()
 
+    if frase_motivacional is None:
+        return  # Salir de la función si no se obtuvo una frase
+
     # Formato del papiro
     papiro_style = """
         <style>
@@ -78,4 +85,3 @@ def exibir_frase():
 
 # Llamar a la función
 exibir_frase()
-
